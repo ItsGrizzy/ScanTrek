@@ -26,7 +26,7 @@ Why I Built ScanTrek: Traditional port scanners can be slow and resource-intensi
 
 1. **Clone the repository**  
    ```bash
-   git clone https://github.com/yourusername/scantrek.git
+   git clone https://github.com/Grizzy529/ScanTrek.git
    cd scantrek
 
 2. **Create & activate a virtual environment (optional but recommended)**
