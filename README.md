@@ -143,9 +143,3 @@ Why I Built ScanTrek: Traditional port scanners can be slow and resource-intensi
 
 
 ```
-
-[2] Data Sheet (CSV)
-
-[3] Structured Data (JSON)
-
-After the fast asynchronous pass, you’ll see hosts with open ports. You can then choose to trigger the Deep Scan Protocol (Nmap) on discovered hosts.
