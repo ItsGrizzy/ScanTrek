@@ -46,7 +46,7 @@ Why I Built ScanTrek: Traditional port scanners can be slow and resource-intensi
 ## Usage
 **Run the main script:**
     
-    python3 ScanTreak.py
+    python3 ScanTrek.py
 ** You will be prompted to **
 ```
 ╔════════════════════════════════════════════════════════════════════════════════════════╗
