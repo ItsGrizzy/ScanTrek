@@ -144,21 +144,6 @@ Why I Built ScanTrek: Traditional port scanners can be slow and resource-intensi
 
 ```
 
-
-Select Scan Type:
-
-[1] Standard Scan (Ports 1–1024)
-
-[2] Strategic Scan (Critical ports)
-
-[3] Full Spectrum Scan (Ports 1–65535)
-
-[4] Custom Port Scan
-
-Select Output Format:
-
-[1] Text Report (TXT)
-
 [2] Data Sheet (CSV)
 
 [3] Structured Data (JSON)
