@@ -36,7 +36,7 @@ venv\Scripts\activate         # On Windows
 # 3. Install required Python packages
 pip install -r requirements.txt
 
-# 4. ( Optional) Make sure nmap is installed and in your system's PATH: ( 
+# 4. ( Optional) Make sure nmap is installed and in your system's PATH: 
 nmap --version
 
 ```
