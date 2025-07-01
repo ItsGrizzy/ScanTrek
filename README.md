@@ -22,32 +22,35 @@ Why I Built ScanTrek: Traditional port scanners can be slow and resource-intensi
 
 ---
 
-## Installation
+## 📦 Installation
+```
+# 1. Clone the repository
+git clone https://github.com/Grizzy529/ScanTrek.git
+cd ScanTrek
 
-1. **Clone the repository**  
-   ```bash
-   git clone https://github.com/Grizzy529/ScanTrek.git
-   cd ScanTrek
+# 2. (Optional) Create and activate a virtual environment
+python3 -m venv venv
+source venv/bin/activate      # On Linux/macOS
+venv\Scripts\activate         # On Windows
 
-2. **Create & activate a virtual environment (optional but recommended)**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate    # Linux/macOS
-   venv\Scripts\activate       # Windows PowerShell
+# 3. Install required Python packages
+pip install -r requirements.txt
 
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
+# 4. ( Optional) Make sure nmap is installed and in your system's PATH: ( 
+nmap --version
 
-4. ** Ensure nmap is in your PATH for deep scans **
-    ````bash
-    nmap --version
+```
 
-## Usage
-**Run the main script:**
-    
-    python3 ScanTrek.py
-** You will be prompted to **
+## 🚀 Usage
+**Run the scanner using:**
+```
+python3 ScanTrek.py
+```
+**You will be prompted to:**
+- Enter a target IP, domain, or CIDR/range <br/>
+- Choose scan type: Standard, Strategic, Full, or Custom ports <br/>
+- Select output format: TXT, CSV, or JSON <br/>
+- Optionally run deep scan (nmap) <br/>
 ```
 ╔════════════════════════════════════════════════════════════════════════════════════════╗
 ║ █████████                                ███████████                    █████          ║
