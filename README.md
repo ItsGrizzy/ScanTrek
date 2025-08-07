@@ -4,53 +4,43 @@ Find open ports faster than ever before! ScanTrek is the next-generation port sc
 
 ![ScanTrek Banner](https://github.com/ItsGrizzy/ScanTrek/blob/main/ScanTrek.png)
 
-## Why I Built ScanTrek
-* I created ScanTrek to solve a critical problem: traditional port scanners are either too slow for large networks or lack the depth needed for serious security work. My mission was to build a tool that delivers:
+## ❓ Why I Built ScanTrek
 
-* Lightning-fast results (25 seconds for 131,000+ port checks!)
+I created ScanTrek to solve a critical problem: traditional port scanners are either too slow for large networks or lack the depth needed for serious security work. My mission was to build a tool that delivers:
 
-* Pinpoint accuracy with intelligent host discovery
+- ⚡ **Lightning-fast results** — 25 seconds for 131,000+ port checks  
+- 🎯 **Pinpoint accuracy** — Intelligent host discovery  
+- 🏢 **Enterprise-grade features** — Intuitive interface  
+- 🔎 **Deep scanning capabilities** — Beyond surface-level results  
 
-* Enterprise-grade features in an intuitive interface
-
-* Deep scanning capabilities that go beyond surface-level results
 
 ## 🔥 Key Features That Set ScanTrek Apart
-1. Military-Grade Speed
-*  Scan entire subnets in seconds, not hours - 131,070 ports scanned in just 25 seconds!
 
-2. Smart Host Discovery
-*  Automatically detects active hosts before scanning, saving hours on dead IPs
+- **Military-Grade Speed**  
+  Scan entire subnets in seconds, not hours — 131,070 ports scanned in just **25 seconds**!
 
-3. Four Powerful Scan Modes:
+- **Smart Host Discovery**  
+  Automatically detects active hosts before scanning, saving hours on dead IPs.
 
-🟢 Standard Scan (Ports 1-1024)
+- **Four Powerful Scan Modes**  
+  - 🟢 **Standard Scan** (Ports 1–1024)  
+  - 🟠 **Strategic Scan** (200 critical ports)  
+  - 🔵 **Full Spectrum Scan** (All 65,535 ports)  
+  - 🛠️ **Custom Scan** (Select your own ports)
 
-🟠 Strategic Scan (20 critical ports)
+- **Deep Scan Integration**  
+  One-click Nmap integration for detailed service analysis.
 
-🔵 Full Spectrum Scan (All 65,535 ports)
+- **Professional Reporting**  
+  Export results in **TXT**, **CSV**, or **JSON** formats.
 
-🛠️ Custom Scan (Your specific ports)
-
-4. Deep Scan Integration
-*  One-click Nmap integration for detailed service analysis
-
-5. Professional Reporting
-*  Export results in TXT, CSV, or JSON formats
-
-6. Universal Target Support:
-
-* Single IPs (192.168.1.1)
-
-* IP Ranges (192.168.1.1-100)
-
-* CIDR Blocks (10.0.0.0/24)
-
-* Domains (example.com)
-
-* URLs (https://example.com)
-
-* File Inputs (targets.txt)
+- **Universal Target Support**  
+  - **Single IP**: `192.168.1.1`  
+  - **IP Range**: `192.168.1.1-100`  
+  - **CIDR Block**: `10.0.0.0/24`  
+  - **Domain**: `example.com`  
+  - **URL**: `https://example.com`  
+  - **File Input**: `targets.txt`
 
 ## 🚀 Mind-Blowing Performance
 * Check what ScanTrek can do in under 30 seconds:
@@ -62,7 +52,7 @@ Find open ports faster than ever before! ScanTrek is the next-generation port sc
   [✓] Scan completed in 25.7s
 ```
 
-## Installation & Setup
+## ⚙️ Installation & Setup
 * Requirements
 ```
 Python 3.7+
