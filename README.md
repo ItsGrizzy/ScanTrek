@@ -189,13 +189,13 @@ scantrek
 ╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
 ```
 ## FAQ
-Q: How fast is ScanTrek compared to other scanners?
-A: ScanTrek is 10-50x faster than traditional scanners, scanning 131,000+ ports in 28 seconds!
+Q: How fast is ScanTrek compared to other scanners? <br>
+A: ScanTrek is 10-50x faster than traditional scanners, scanning 131,000+ ports in 25 seconds!
 
-Q: Can I scan through firewalls?
+Q: Can I scan through firewalls? <br>
 A: Yes! ScanTrek uses advanced techniques to detect hosts behind firewalls.
 
-Q: What makes the deep scan special?
+Q: What makes the deep scan special? <br>
 A: Our one-click Nmap integration provides detailed service info without leaving the tool.
 
 ## License
