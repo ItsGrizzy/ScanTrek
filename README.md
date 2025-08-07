@@ -1,56 +1,92 @@
-# ScanTrek: Ultimate Port Scanner
+# ScanTrek: Ultimate Port Scanner ⚡
 The Fastest Port Scanner for Security Professionals
-ScanTrek is a high-performance asynchronous port scanner designed for rapid network reconnaissance. Built with Python's asyncio library, it delivers lightning-fast scanning capabilities while maintaining accuracy. Whether you're scanning a single host or an entire network range, ScanTrek provides comprehensive port visibility with minimal resource consumption.
+Find open ports faster than ever before! ScanTrek is the next-generation port scanner that combines blazing speed with military-grade precision to map your network in record time. Built for security professionals, network admins, and ethical hackers who demand both speed and accuracy.
 
-Why I Built ScanTrek: Traditional port scanners can be slow and resource-intensive when scanning large networks. I created ScanTrek to solve this problem - combining asynchronous I/O operations with intelligent scanning techniques to deliver results 10x faster than conventional scanners while maintaining enterprise-grade reliability.
+## Why I Built ScanTrek
+* I created ScanTrek to solve a critical problem: traditional port scanners are either too slow for large networks or lack the depth needed for serious security work. My mission was to build a tool that delivers:
 
-## Key Features
-⚡Blazing Fast Scans: Asynchronous architecture processes thousands of ports simultaneousl <br/>
-⚡Multiple Target Formats: Supports single IPs, CIDR ranges, domains, and custom IP ranges <br/>
-⚡Smart Port Selection: Predefined scan profiles and custom port ranges <br/>
-⚡Nmap Integration: Detailed service scanning after port discovery <br/>
-⚡Professional Reporting: TXT, CSV, and JSON output formats <br/>
-⚡Real-time Progress Tracking: Visual progress bars and status updates <br/>
+* Lightning-fast results (25 seconds for 131,000+ port checks!)
 
-## Requirements
+* Pinpoint accuracy with intelligent host discovery
 
-- **Python 3.7+**  
-- **[nmap](https://nmap.org/)** (for deep scans)  
-- **Python packages**:
-  - `colorama`
-  - `tqdm`
+* Enterprise-grade features in an intuitive interface
 
----
+* Deep scanning capabilities that go beyond surface-level results
 
-## 📦 Installation
+## 🔥 Key Features That Set ScanTrek Apart
+1. Military-Grade Speed
+*  Scan entire subnets in seconds, not hours - 131,070 ports scanned in just 25 seconds!
+
+2. Smart Host Discovery
+*  Automatically detects active hosts before scanning, saving hours on dead IPs
+
+3. Four Powerful Scan Modes:
+
+🟢 Standard Scan (Ports 1-1024)
+
+🟠 Strategic Scan (20 critical ports)
+
+🔵 Full Spectrum Scan (All 65,535 ports)
+
+🛠️ Custom Scan (Your specific ports)
+
+4. Deep Scan Integration
+*  One-click Nmap integration for detailed service analysis
+
+5. Professional Reporting
+*  Export results in TXT, CSV, or JSON formats
+
+6. Universal Target Support:
+
+* Single IPs (192.168.1.1)
+
+* IP Ranges (192.168.1.1-100)
+
+* CIDR Blocks (10.0.0.0/24)
+
+* Domains (example.com)
+
+* URLs (https://example.com)
+
+* File Inputs (targets.txt)
+
+## 🚀 Mind-Blowing Performance
+* Check what ScanTrek can do in under 30 seconds:
 ```
-# 1. Clone the repository
-git clone https://github.com/Grizzy529/ScanTrek.git
+  [*] Targets: 2
+  [*] Ports per target: 65535
+  [*] Total operations: 131,070
+  [*] Initiating scan sequence...
+  [✓] Scan completed in 25.7s
+```
+
+## Installation & Setup
+* Requirements
+```
+Python 3.7+
+Nmap (for deep scanning)
+```
+### Quick Install
+```
+# Clone repository
+git clone https://github.com/ItsGrizzy/ScanTrek.git
 cd ScanTrek
 
-# 2. (Optional) Create and activate a virtual environment
-python3 -m venv venv
-source venv/bin/activate      # On Linux/macOS
-venv\Scripts\activate         # On Windows
+# Install dependencies
+pip install colorama tqdm
 
-# 3. Install required Python packages
-pip install -r requirements.txt
+# Make script executable
+chmod +x ScanTrek.py
 
-# 4. ( Optional) Make sure nmap is installed and in your system's PATH: 
-nmap --version
-
+# Create global symlink (run anywhere!)
+sudo ln -s $(pwd)/ScanTrek.py /usr/local/bin/scantrek
 ```
-
-## 🚀 Usage
-**Run the scanner using:**
+### Run From Anywhere
 ```
-python3 ScanTrek.py
+# After creating symlink
+scantrek
 ```
-**You will be prompted to:**
-- Enter a target IP, domain, or CIDR/range <br/>
-- Choose scan type: Standard, Strategic, Full, or Custom ports <br/>
-- Select output format: TXT, CSV, or JSON <br/>
-- Optionally run deep scan (nmap) <br/>
+### Usage Demo
 ```
 ╔════════════════════════════════════════════════════════════════════════════════════════╗
 ║ █████████                                ███████████                    █████          ║
@@ -65,21 +101,26 @@ python3 ScanTrek.py
 ║               ⚡ SCANTREK -- THE FASTEST PATH TO OPEN PORTS ⚡                         ║                           
 ╚════════════════════════════════════════════════════════════════════════════════════════╝
 
-                                                Author: Pratham Shah                                                
-                               LinkedIn: https://www.linkedin.com/in/prathamshah529/                                
+                                                Author: Pratham Shah                                               
+                               LinkedIn: https://www.linkedin.com/in/prathamshah529/                               
 
-                                        Initializing cyber scanning protocols...                                         
+                                        Initializing cyber scanning protocols...                                        
 
 ╔════════════════════╗
 ║ TARGET ACQUISITION ║
 ╚════════════════════╝
-# Enter IP, CIDR range, domain, or URL: (e.g. 192.168.1.0/24), range (192.168.1.10-20), or hostname.
-  [?] Enter IP, CIDR range, domain, or URL: 192.168.1.71
+  [?] Enter IP, CIDR range, domain, URL, or file path: 10.200.107.1/24
+
+╔════════════════╗
+║ HOST DISCOVERY ║
+╚════════════════╝
+  [*] Multiple hosts detected (254). Performing host discovery...
+  [*] Discovering active hosts: 100%|██████████████████████████████████████████████████| 254/254 [00:04<00:00, 61.94it/s]
+  [✓] Found 2 active hosts
 
 ╔════════════════════╗
 ║ SCAN CONFIGURATION ║
 ╚════════════════════╝
-# Select Scan Type:
   [1] Standard Scan (Ports 1-1024)
   [2] Strategic Scan (Critical Ports)
   [3] Full Spectrum Scan (All Ports)
@@ -90,7 +131,6 @@ python3 ScanTrek.py
 ╔══════════════════════╗
 ║ OUTPUT CONFIGURATION ║
 ╚══════════════════════╝
-# Select Output Format:
   [1] Text Report (TXT)
   [2] Data Sheet (CSV)
   [3] Structured Data (JSON)
@@ -100,49 +140,51 @@ python3 ScanTrek.py
 ╔═════════════════╗
 ║ SCAN INITIATION ║
 ╚═════════════════╝
-  [*] Targets: 1
+  [*] Targets: 2
   [*] Ports per target: 65535
-  [*] Total operations: 65,535
+  [*] Total operations: 131,070
   [*] Initiating scan sequence...
-  [*] Scanning 192.168.1.71: 100%|██████████████████████████████████████████████████| 1/1 [00:03<00:00,  3.09s/it]
-  [✓] Scan completed in 3.1s
-  [✓] Scan results saved to: ScanTrek_Report_20250630_173118.txt
+  [*] Scanning 10.200.107.33: 100%|██████████████████████████████████████████████████| 2/2 [00:25<00:00, 12.83s/it] 
+  [✓] Scan completed in 25.7s
+  [✓] Scan results saved to: ScanTrek_Report_20250807_035232.txt
 
 ╔══════════════╗
 ║ SCAN RESULTS ║
 ╚══════════════╝
-  [*] Hosts with open ports: 1
-  [+] 192.168.1.71: 8 open ports
-      21, 22, 1883, 3389, 5355, 8501, 8834, 14148
+  [*] Hosts with open ports: 2
+  [+] 10.200.107.250: 2 open ports
+      22, 1337
+  [+] 10.200.107.33: 3 open ports
+      22, 80, 33060
 
 ╔════════════════════╗
 ║ DEEP SCAN PROTOCOL ║
 ╚════════════════════╝
-# After the fast asynchronous pass, you’ll see hosts with open ports. You can then choose to trigger the Deep Scan Protocol (Nmap) on discovered hosts. ( Yes/No )
   [?] Execute deep scan protocol? (y/N): y
-  [*] Initializing deep scan sequence...                                                                                      
+  [*] Initializing deep scan sequence...                                                                                     
 
-  [*] Initiating deep scan protocol...                                                                                        
-  [*] Running 1 scans concurrently
-  [>] Starting deep scan for 192.168.1.71
-  [>] Results will be saved to: nmap_192.168.1.71_1751284884.txt
-  [✓] Scan completed for 192.168.1.71
-       Results saved to: nmap_192.168.1.71_1751284884.txt
-  [*] Progress: 1/1 (55.9s)
-  [✓] Deep scan completed: 1 hosts
-       Elapsed time: 55.9s
+  [*] Initiating deep scan protocol...                                                                                       
+  [*] Running 2 scans concurrently
+  [>] Starting deep scan for 10.200.107.250
+  [>] Results will be saved to: nmap_10.200.107.250_1754553156.txt
+  [>] Starting deep scan for 10.200.107.33
+  [>] Results will be saved to: nmap_10.200.107.33_1754553156.txt
+  [✓] Scan completed for 10.200.107.250
+  [*] Progress: 1/2 (18.2s)
+  [✓] Scan completed for 10.200.107.33
+  [*] Progress: 2/2 (19.8s)
+  [✓] Deep scan completed: 2 hosts
+       Elapsed time: 19.8s
 
 ╔════════════════════╗
 ║ OPERATION COMPLETE ║
 ╚════════════════════╝
-  [✓] Total scan time: 3.1s
-  [✓] Targets scanned: 1
+  [✓] Total scan time: 25.7s
+  [✓] Targets scanned: 2
   [✓] Ports scanned per target: 65535
   [*] System returning to normal operation...
 
-╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
-                                 ║ SCANTREK OPERATION COMPLETE. ║                                  
-╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
-
-
+╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+                                 ║ SCANTREK OPERATION COMPLETE. SYSTEM SECURE. ║                                 
+╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
 ```
