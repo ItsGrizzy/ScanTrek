@@ -188,3 +188,20 @@ scantrek
                                  ║ SCANTREK OPERATION COMPLETE. SYSTEM SECURE. ║                                 
 ╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
 ```
+## FAQ
+Q: How fast is ScanTrek compared to other scanners?
+A: ScanTrek is 10-50x faster than traditional scanners, scanning 131,000+ ports in 28 seconds!
+
+Q: Can I scan through firewalls?
+A: Yes! ScanTrek uses advanced techniques to detect hosts behind firewalls.
+
+Q: What makes the deep scan special?
+A: Our one-click Nmap integration provides detailed service info without leaving the tool.
+
+## License
+ScanTrek is released under the [MIT License](https://github.com/ItsGrizzy/ScanTrek?tab=MIT-1-ov-file#readme)
+
+## Disclaimer: 
+Use ScanTrek only on networks you have explicit permission to scan. The developer assumes no liability for misuse. Always obtain proper authorization before scanning.
+
+
