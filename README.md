@@ -2,6 +2,8 @@
 The Fastest Port Scanner for Security Professionals
 Find open ports faster than ever before! ScanTrek is the next-generation port scanner that combines blazing speed with military-grade precision to map your network in record time. Built for security professionals, network admins, and ethical hackers who demand both speed and accuracy.
 
+![ScanTrek Banner](https://github.com/ItsGrizzy/ScanTrek/blob/main/ScanTrek.png)
+
 ## Why I Built ScanTrek
 * I created ScanTrek to solve a critical problem: traditional port scanners are either too slow for large networks or lack the depth needed for serious security work. My mission was to build a tool that delivers:
 
