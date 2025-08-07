@@ -64,7 +64,7 @@ Find open ports faster than ever before! ScanTrek is the next-generation port sc
 * Requirements
 ```
 Python 3.7+
-Nmap (for deep scanning)
+Nmap (for deep scanning - still optional)
 ```
 ### Quick Install
 ```
