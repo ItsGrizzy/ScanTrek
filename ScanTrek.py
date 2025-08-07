@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import asyncio
 import socket
 import subprocess
@@ -6,12 +8,14 @@ import json
 import signal
 import os
 import time
-import random
+import glob
+import re
 from ipaddress import ip_address, ip_network
 from tqdm import tqdm
 from colorama import init, Fore, Back, Style
 import shutil
 from datetime import datetime
+import urllib.parse
 
 # Initialize colorama
 init(autoreset=True)
@@ -38,6 +42,8 @@ signal.signal(signal.SIGINT, signal_handler)
 PORT_SCAN_TIMEOUT = 1.5
 MAX_CONCURRENT_PER_HOST = 500
 NMAP_CONCURRENCY = 3
+DISCOVERY_PORTS = [22, 80, 443, 3389]  # Common ports for host discovery
+DISCOVERY_TIMEOUT = 1.0  # Shorter timeout for host discovery
 
 # Print header
 def print_header():
@@ -175,7 +181,6 @@ async def run_nmap_scans(results):
         
         if success:
             print(f"{Fore.GREEN}  [✓] {Fore.CYAN}Scan completed for {Fore.GREEN}{host}")
-            print(f"{Fore.GREEN}       {Fore.CYAN}Results saved to: {Fore.YELLOW}{output}")
         else:
             print(f"{Fore.RED}  [✗] {Fore.CYAN}Scan failed for {Fore.GREEN}{host}: {Fore.RED}{output}")
         
@@ -217,16 +222,32 @@ def save_results(results, filename, fmt):
             json.dump(data, f, indent=2)
         print(f"{Fore.GREEN}  [✓] {Fore.CYAN}Scan results saved to: {Fore.YELLOW}{output_file}")
 
+def extract_domain_from_url(url):
+    """Extract domain from URL with protocol handling"""
+    try:
+        # Handle common URL formats
+        if '://' in url:
+            parsed = urllib.parse.urlparse(url)
+            return parsed.hostname if parsed.hostname else url
+        elif url.startswith('www.'):
+            return url[4:]
+        return url
+    except Exception:
+        return url
+
 def parse_targets(target_input):
     targets = []
     host = target_input.strip()
     
+    # Clean URL input
+    cleaned_host = extract_domain_from_url(host)
+    
     try:
-        if "/" in host:
-            net = ip_network(host, strict=False)
+        if "/" in cleaned_host:
+            net = ip_network(cleaned_host, strict=False)
             return [str(ip) for ip in net.hosts()]
-        if "-" in host:
-            parts = host.split("-")
+        if "-" in cleaned_host:
+            parts = cleaned_host.split("-")
             if len(parts) == 2:
                 start_ip = ip_address(parts[0])
                 end_ip = ip_address(parts[1]) if "." in parts[1] else ip_address(
@@ -234,15 +255,49 @@ def parse_targets(target_input):
                 )
                 return [str(ip_address(ip)) 
                         for ip in range(int(start_ip), int(end_ip) + 1)]
-        ip_address(host)
-        return [host]
+        ip_address(cleaned_host)
+        return [cleaned_host]
     except ValueError:
         try:
-            return [socket.gethostbyname(host)]
+            # Try to resolve as domain
+            return [socket.gethostbyname(cleaned_host)]
         except socket.gaierror:
-            print(f"{Fore.RED}  [!] {Fore.YELLOW}Could not resolve {host}. Using as-is.")
-            return [host]
+            # If that fails, try the original input
+            try:
+                return [socket.gethostbyname(host)]
+            except socket.gaierror:
+                print(f"{Fore.RED}  [!] {Fore.YELLOW}Could not resolve {host} or {cleaned_host}. Using as-is.")
+                return [cleaned_host]
     return []
+
+async def discover_active_hosts(hosts):
+    """Discover active hosts using common ports"""
+    active_hosts = []
+    sem = asyncio.Semaphore(MAX_CONCURRENT_PER_HOST)
+    
+    with tqdm(total=len(hosts), desc=f"{Fore.BLUE}  [*] {Fore.CYAN}Discovering active hosts", 
+              bar_format="{l_bar}{bar:50}{r_bar}", ncols=TERM_WIDTH) as pbar:
+        tasks = []
+        for host in hosts:
+            # Create a task for each host to check if any discovery port is open
+            task = asyncio.create_task(scan_host_discovery(host, DISCOVERY_PORTS, sem))
+            tasks.append(task)
+        
+        for future in asyncio.as_completed(tasks):
+            host, is_active = await future
+            if is_active:
+                active_hosts.append(host)
+            pbar.update(1)
+    
+    return active_hosts
+
+async def scan_host_discovery(host, ports, sem):
+    """Check if host is active by scanning discovery ports"""
+    for port in ports:
+        result = await scan_port(host, port, sem, DISCOVERY_TIMEOUT)
+        if result is not None:
+            return (host, True)
+    return (host, False)
 
 async def scan_all_hosts(hosts, ports):
     results = []
@@ -271,6 +326,58 @@ def get_user_input(prompt, color=Fore.CYAN):
     print(f"{Fore.BLUE}  [?] {color}{prompt}{Style.RESET_ALL}", end="")
     return input().strip()
 
+def read_targets_from_file(file_path):
+    """Read targets from a file with error handling"""
+    targets = []
+    try:
+        with open(file_path, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    # Try to parse each line as targets
+                    try:
+                        parsed = parse_targets(line)
+                        if parsed:
+                            targets.extend(parsed)
+                        else:
+                            print(f"{Fore.RED}  [!] {Fore.YELLOW}Skipping invalid target: {line}")
+                    except Exception as e:
+                        print(f"{Fore.RED}  [!] {Fore.YELLOW}Error processing target '{line}': {e}")
+        return targets
+    except Exception as e:
+        print(f"{Fore.RED}  [!] {Fore.YELLOW}Error reading file: {e}")
+        return []
+
+def auto_complete_file_path(text, state):
+    """Auto-complete function for file paths"""
+    if '~' in text:
+        text = os.path.expanduser(text)
+    return (glob.glob(text + '*') + [None])[state]
+
+def get_target_input():
+    """Get target input with file auto-completion"""
+    # Register tab completion
+    try:
+        import readline
+        readline.set_completer_delims(' \t\n;')
+        readline.parse_and_bind("tab: complete")
+        readline.set_completer(auto_complete_file_path)
+    except ImportError:
+        print(f"{Fore.YELLOW}  [*] {Fore.CYAN}Tab completion not available on this system")
+    
+    prompt = "Enter IP, CIDR range, domain, URL, or file path: "
+    print(f"{Fore.BLUE}  [?] {Fore.CYAN}{prompt}{Style.RESET_ALL}", end="")
+    user_input = input().strip()
+    
+    # Reset completer
+    try:
+        import readline
+        readline.set_completer(None)
+    except ImportError:
+        pass
+    
+    return user_input
+
 async def main_async():
     global exit_flag
     
@@ -278,15 +385,36 @@ async def main_async():
     print_header()
     
     print_section_header("Target Acquisition")
-    target_input = get_user_input("Enter IP, CIDR range, domain, or URL: ")
+    target_input = get_target_input()
     if not target_input:
         print(f"{Fore.RED}  [!] {Fore.YELLOW}No input provided. Operation aborted.")
         return
+    
+    # Check if input is a file
+    hosts = []
+    if os.path.isfile(target_input):
+        print(f"{Fore.BLUE}  [*] {Fore.CYAN}Reading targets from file: {Fore.GREEN}{target_input}")
+        hosts = read_targets_from_file(target_input)
+        if not hosts:
+            print(f"{Fore.RED}  [!] {Fore.YELLOW}No valid targets found in file. Operation aborted.")
+            return
+    else:
+        hosts = parse_targets(target_input)
+        if not hosts:
+            print(f"{Fore.RED}  [!] {Fore.YELLOW}No valid targets detected. Operation aborted.")
+            return
+
+    # Host discovery for large ranges
+    if len(hosts) > 1:
+        print_section_header("Host Discovery")
+        print(f"{Fore.BLUE}  [*] {Fore.CYAN}Multiple hosts detected ({len(hosts)}). Performing host discovery...")
+        active_hosts = await discover_active_hosts(hosts)
+        print(f"{Fore.GREEN}  [✓] {Fore.CYAN}Found {len(active_hosts)} active hosts")
+        hosts = active_hosts
         
-    hosts = parse_targets(target_input)
-    if not hosts:
-        print(f"{Fore.RED}  [!] {Fore.YELLOW}No valid targets detected. Operation aborted.")
-        return
+        if not hosts:
+            print(f"{Fore.RED}  [!] {Fore.YELLOW}No active hosts found. Operation aborted.")
+            return
 
     print_section_header("Scan Configuration")
     print(f"{Fore.BLUE}  [1] {Fore.CYAN}Standard Scan (Ports 1-1024)")
@@ -296,7 +424,7 @@ async def main_async():
     choice = get_user_input("Select scan type [1-4]: ")
     
     if choice == "2":
-        ports = [21,22,23,25,53,80,110,111,135,139,143,443,445,993,995,1723,3306,3389,5900,8080]
+        ports = [1,3,4,6,7,9,13,17,19,20,21,22,23,24,25,26,30,32,33,37,42,43,49,53,70,79,80,81,82,83,84,85,88,89,90,99,100,106,109,110,111,113,119,125,135,139,143,144,146,161,163,179,199,211,212,222,254,255,256,259,264,280,301,306,311,340,366,389,406,407,416,417,425,427,443,444,445,458,464,465,481,497,500,512,513,514,515,524,541,543,544,545,548,554,555,563,587,593,616,617,625,631,636,646,648,666,667,668,683,687,691,700,705,711,714,720,722,726,749,765,777,783,787,800,801,808,843,873,880,888,898,900,901,902,903,911,912,981,987,990,992,993,995,999,1000,1001,1002,1007,1009,1010,1011,1021,1022,1023,1024,1025,1026,1027,1028,1029,1030,1031,1032,1033,1034,1035,1036,1037,1038,1039,1040,1041,1042,1043,1044,1045,1046,1047,1048,1049,1050,1051,1052,1053,1054,1055,1056,1057,1058,1059,1060,1061,1062,1063,1064,1065,1066,1067,1068,1069,33060]
         print(f"{Fore.GREEN}  [✓] {Fore.CYAN}Selected: Strategic Scan ({len(ports)} ports)")
     elif choice == "3":
         ports = list(range(1, 65536))
